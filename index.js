@@ -114,3 +114,186 @@ function gameObject() {
         },
     };
 }
+
+function allPlayers() {
+  const game = gameObject();
+
+  //  empty object to hold all players
+  const players = {};
+
+  const homePlayers = game.home.players;
+  const awayPlayers = game.away.players;
+
+  // home players
+  for (const name in homePlayers) {
+    players[name] = homePlayers[name];
+  }
+
+  // away players
+  for (const name in awayPlayers) {
+    players[name] = awayPlayers[name];
+  }
+
+  return players;
+}
+
+
+//Required functions
+
+//points for a given player
+function numPointsScored(playerName) {
+    return allPlayers()[playerName].points;
+}
+//shoe size for a given player
+function shoeSize (playerName) {
+    return allPlayers()[playerName].shoe;
+}
+//colors for a given team
+function teamColors(teamName) {
+    const game = gameObject();
+   
+    if (game.home.teamName === teamName) {
+        return game.home.colors;
+    } else if (game.away.teamName === teamName) {
+        return game.away.colors;
+    }
+
+    //incase team name is wrong 
+    return undefined;
+}
+
+//array with both team names
+function teamNames() {
+    const game = gameObject();
+    return [game.home.teamName, game.away.teamName];
+}
+
+//jersey numbers for all players on a team
+function playerNumbers(teamName) {
+    const game = gameObject();
+    const team = game.home.teamName === teamName ? game.home : game.away;
+    const numbers = [];
+
+    const players = team.players;
+    for (const name in players) {
+        numbers.push(players[name].number);
+    }
+    return numbers;
+}
+
+//full stats object for a player
+function playerStats(playerName) {
+    const players = allPlayers();
+    return players[playerName];
+}
+
+//Rebounds for the player with the biggest shoe size
+
+function bigShoeRebounds() {
+  const players = allPlayers();   
+  let biggestPlayer = null;       
+
+  // go through each player
+  for (const name in players) {
+    if (
+      biggestPlayer === null ||                    
+      players[name].shoe > players[biggestPlayer].shoe 
+    ) {
+      biggestPlayer = name;
+    }
+  }
+
+  
+  return players[biggestPlayer].rebounds;
+}
+
+
+// Bonus functions
+
+//player who scored the most points
+function mostPointsScored() {
+    const players = allPlayers();
+    let topPlayer = null;
+    let maxPoints = -Infinity;
+
+    for (const name in players) {
+        const pts = players[name].points;
+        if (pts > maxPoints) {
+            maxPoints = pts;
+            topPlayer = name;
+        }
+    }
+    return topPlayer;
+}
+
+//team that has the most total points
+function winningTeam() {
+    const game = gameObject();
+
+    let homeTotal = 0;
+    for (const name in game.home.players) {
+        homeTotal += game.home.players[name].points;
+    }
+    let awayTotal = 0;
+    for (const name in game.away.players) {
+        awayTotal += game.away.players[name].points;
+    }
+    if (homeTotal > awayTotal) {
+        return game.home.teamName;
+    } else if (awayTotal > homeTotal) {
+        return game.away.teamName;
+    } else {
+        return "tie";
+    }
+    }
+
+// player with the longest name
+function playerWithLongestName() {
+  const players = allPlayers();
+  let longestName = "";
+  let longestPlayer = null;
+
+  for (const name in players) {
+    if (name.length > longestName.length) {
+      longestName = name;
+      longestPlayer = name;
+    }
+  }
+
+  return longestPlayer;
+}
+
+//super bonus functions
+
+// true if longest-name player also has the most steals
+function doesLongNameStealATon() {
+  const players = allPlayers();
+  const longNamePlayer = playerWithLongestName();
+
+  // find max steals overall
+  let maxSteals = -Infinity;
+  for (const name in players) {
+    if (players[name].steals > maxSteals) {
+      maxSteals = players[name].steals;
+    }
+  }
+
+  // compare steals of longest-name player
+  return players[longNamePlayer].steals === maxSteals;
+}
+
+// exports for Jest
+module.exports = {
+  gameObject,
+  numPointsScored,
+  shoeSize,
+  teamColors,
+  teamNames,
+  playerNumbers,
+  playerStats,
+  bigShoeRebounds,
+  mostPointsScored,
+  winningTeam,
+  playerWithLongestName,
+  doesLongNameStealATon,
+};
