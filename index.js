@@ -214,7 +214,7 @@ function bigShoeRebounds() {
 function mostPointsScored() {
     const players = allPlayers();
     let topPlayer = null;
-    let maxPoints = -Infinity;
+    let maxPoints = 0;
 
     for (const name in players) {
         const pts = players[name].points;
@@ -271,7 +271,7 @@ function doesLongNameStealATon() {
   const longNamePlayer = playerWithLongestName();
 
   // find max steals overall
-  let maxSteals = -Infinity;
+  let maxSteals = 0;
   for (const name in players) {
     if (players[name].steals > maxSteals) {
       maxSteals = players[name].steals;
